@@ -42,36 +42,38 @@ public class MainActivity extends AppCompatActivity {
                         // Android 10-től (API 29) az alkalmazások nem kapcsolgathatják a wifit.
                         // Éppen ezért meg kell vizsgálnunk a telepített Android verzióját.
                         // Ha ez újabb akkor mást kell csinálnunk.
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             textViewInfo.setText("Nincs jogosultság a wifi állapot módosítására");
                             // Megnyitunk 1 beállítási panelt
                             Intent panelIntent = new Intent(Settings.Panel.ACTION_WIFI);
                             // Panel bezárásakor szerentnénk valamit csinálni
                             startActivityForResult(panelIntent, 0);
+                        } else {
+                            // Szükséges engedély: CHANGE_WIFI_STATE
+                            wifiManager.setWifiEnabled(true);
+                            textViewInfo.setText("Wifi bekapcsolva");
                         }
-                        // Szükséges engedély: CHANGE_WIFI_STATE
-                        wifiManager.setWifiEnabled(true);
-                        textViewInfo.setText("Wifi bekapcsolva");
                         break;
                     case R.id.wifi_off:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             textViewInfo.setText("Nincs jogosultság a wifi állapot módosítására");
                             // Másik panelen is megtalálható a wifi kapcsolásához szükséges gomb.
                             Intent panelIntent = new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
                             startActivityForResult(panelIntent, 0);
+                        } else {
+                            wifiManager.setWifiEnabled(false);
+                            textViewInfo.setText("Wifi kikapcsolva");
                         }
-                        wifiManager.setWifiEnabled(false);
-                        textViewInfo.setText("Wifi kikapcsolva");
                         break;
                     case R.id.wifi_info:
                         ConnectivityManager conManager =
-                                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         // Szükséges engedély: ACCESS_NETWORK_STATE
                         NetworkInfo netInfo = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                        if (netInfo.isConnected()){
+                        if (netInfo.isConnected()) {
                             int ip_number = wifiInfo.getIpAddress();
                             String ip = Formatter.formatIpAddress(ip_number);
-                            textViewInfo.setText("IP: "+ip);
+                            textViewInfo.setText("IP: " + ip);
                         } else {
                             textViewInfo.setText("Nem csatlakoztál wifi hálózatra");
                         }
@@ -87,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // A requestCode az az érték amit mi adunk paraméterül startActivityForResult függvénynek.
-        if (requestCode == 0){
+        if (requestCode == 0) {
             if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED
                     || wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING
-            ){
+            ) {
                 textViewInfo.setText("Wifi bekapcsolva");
-            }else if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED
+            } else if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED
                     || wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING
-            ){
+            ) {
                 textViewInfo.setText("Wifi kikapcsolva");
             }
         }
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         textViewInfo = findViewById(R.id.textViewInfo);
 
-        wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         // Szükséges engedély: ACCESS_WIFI_STATE
         wifiInfo = wifiManager.getConnectionInfo();
     }
