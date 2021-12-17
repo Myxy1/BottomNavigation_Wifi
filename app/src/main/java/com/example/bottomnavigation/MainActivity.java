@@ -1,5 +1,6 @@
 package com.example.bottomnavigation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,15 +11,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private WifiInfo wifiInfo;
     private TextView textViewInfo;
 
+    @SuppressLint({"SetTextI18n", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Akkor fog meghívódni amikor bezárjuk a megnyitott panelt.
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
